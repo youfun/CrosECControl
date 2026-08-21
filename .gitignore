@@ -1,0 +1,35 @@
+# CMake and Visual Studio build output
+/build/
+/out/
+CMakeFiles/
+CMakeCache.txt
+*.sln
+*.vcxproj*
+*.filters
+*.user
+.vs/
+
+# Compiled files
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.res
+
+# Local screenshots and captures
+/2026-*.png
+/Snipaste_*.png
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Pi agent local state
+.pi/
+

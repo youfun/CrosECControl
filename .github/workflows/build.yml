@@ -1,0 +1,74 @@
+name: Build
+
+on:
+  push:
+    branches: [master, main]
+    tags: ["v*.*.*"]
+  pull_request:
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $base = (Get-Content -Path VERSION -Raw).Trim()
+          if ($env:GITHUB_REF_TYPE -eq 'tag') {
+            $ver = $env:GITHUB_REF_NAME -replace '^v', ''
+          } else {
+            $ver = "$base+$($env:GITHUB_SHA.Substring(0, 7))"
+          }
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$ver"
+          Write-Host "CROSEC_VERSION=$ver"
+
+      - name: Configure
+        run: cmake -S . -B build -A x64 -DCROSEC_VERSION="${{ steps.version.outputs.version }}"
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Stage artifact
+        shell: pwsh
+        run: |
+          $ver = '${{ steps.version.outputs.version }}'
+          $safe = $ver -replace '[^\d\w\.\-]+', '-'
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item -Path build\Release\CrosECControl.exe -Destination "dist\CrosECControl-$safe.exe"
+          Write-Host "Staged dist\CrosECControl-$safe.exe"
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrosECControl-windows-x64
+          path: dist/CrosECControl-*.exe
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $asset = Get-ChildItem -Path dist\CrosECControl-*.exe | Select-Object -First 1
+          if (-not $asset) { throw 'Release asset not found' }
+          $tag = $env:GITHUB_REF_NAME
+          $exists = $true
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) { $exists = $false }
+          if ($exists) {
+            gh release upload $tag $asset.FullName --clobber
+          } else {
+            gh release create $tag $asset.FullName --title "CrosEC Control $tag" --generate-notes
+          }
