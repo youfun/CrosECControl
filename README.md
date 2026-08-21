@@ -5,12 +5,16 @@
 </p>
 
 <p align="center">
-  <a href="README.md">中文</a> · <a href="README.en.md">English</a>
+  <a href="README.md">中文</a> · <a href="README.en.md">English</a> · <a href="https://github.com/youfun/CrosECControl/releases/latest">Releases</a>
 </p>
 
 CrosEC Control 是一个轻量的原生 Win32 控制面板，为了能在低内存机器上使用，采用了 Win32 原生开发，同类软件中内存占用较低。它用于在 Windows 上管理 ChromeOS Embedded Controller（EC），把本机已安装的 `ectool` 中常用、相对安全的功能整理为按钮、滑块和状态面板，无需在终端中手动输入命令。
 
 > 本程序面向安装了 CoolStar CROS-EC Windows 驱动及配套 `ectool` 的设备。普通 Windows 电脑通常无法使用其中的硬件控制功能。本仓库不包含 `ectool` 本身。
+
+## 下载
+
+预编译程序请到 [GitHub Releases](https://github.com/youfun/CrosECControl/releases/latest) 下载。
 
 ## 与 ectool 的关系
 

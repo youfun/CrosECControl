@@ -5,12 +5,16 @@
 </p>
 
 <p align="center">
-  <a href="README.md">中文</a> · <a href="README.en.md">English</a>
+  <a href="README.md">中文</a> · <a href="README.en.md">English</a> · <a href="https://github.com/youfun/CrosECControl/releases/latest">Releases</a>
 </p>
 
 CrosEC Control is a lightweight native Win32 control panel. It uses native Win32 so it can run on low-memory machines, and it uses less memory than similar apps. It manages the ChromeOS Embedded Controller (EC) on Windows by turning common, relatively safe features of the locally installed `ectool` into buttons, sliders, and status panels, without typing commands in a terminal.
 
 > This program is for devices that already have CoolStar’s CROS-EC Windows driver and `ectool`. Typical Windows PCs cannot use the hardware controls. This repository does not include `ectool`.
+
+## Download
+
+Get prebuilt binaries from [GitHub Releases](https://github.com/youfun/CrosECControl/releases/latest).
 
 ## Relationship to ectool
 
